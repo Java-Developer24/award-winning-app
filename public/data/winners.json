@@ -1,0 +1,25 @@
+{
+  "finalists": [
+    {
+      "id": 1,
+      "name": "Anita Sharma",
+      "avatar": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop",
+      "code": "7419",
+      "prize": "Scooty (1st)"
+    },
+    {
+      "id": 2,
+      "name": "Rohit Kumar",
+      "avatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop",
+      "code": "2581",
+      "prize": "Bike (2nd)"
+    },
+    {
+      "id": 3,
+      "name": "Sana Iyer",
+      "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=400&fit=crop",
+      "code": "9034",
+      "prize": "Bike (3rd)"
+    }
+  ]
+}
