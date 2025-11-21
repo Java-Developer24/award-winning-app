@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Settings } from 'lucide-react';
+import { Settings, ChevronRight, Sparkles } from 'lucide-react';
 import SplineScene from './SplineScene';
 import FinalistCard from './FinalistCard';
 
@@ -10,7 +10,6 @@ const Hero = ({ finalists, onRevealStart, onUploadData }) => {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    
     const reader = new FileReader();
     reader.onload = (event) => {
       try {
@@ -20,7 +19,7 @@ const Hero = ({ finalists, onRevealStart, onUploadData }) => {
           alert('Data updated successfully!');
           setShowUpload(false);
         } else {
-          alert('Invalid JSON format. Must contain "finalists" array.');
+          alert('Invalid JSON format.');
         }
       } catch (error) {
         alert('Error parsing JSON');
@@ -30,94 +29,115 @@ const Hero = ({ finalists, onRevealStart, onUploadData }) => {
   };
 
   return (
-    <div className="relative min-h-screen flex flex-col items-center justify-center p-4 overflow-hidden">
+    <div className="relative min-h-screen flex flex-col items-center justify-center p-4 overflow-hidden bg-luxury-black selection:bg-luxury-gold selection:text-black">
       
-      {/* 3D Background */}
+      {/* Background Layers */}
+      <div className="absolute inset-0 bg-grid-slate opacity-20 pointer-events-none"></div>
+      <div className="absolute inset-0 bg-gradient-radial from-luxury-accent/20 via-transparent to-transparent opacity-40 pointer-events-none"></div>
+      
+      {/* 3D Scene - Pushed back */}
       <SplineScene />
 
-      <div className="relative z-10 container mx-auto max-w-6xl">
+      <div className="relative z-10 container mx-auto max-w-7xl pt-10 md:pt-0">
         
-        {/* Header */}
-        <div className="text-center mb-16 space-y-4">
+        {/* Typographic Hero */}
+        <div className="text-center mb-20 relative">
           <motion.div 
-            initial={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="inline-block px-4 py-1 rounded-full bg-white/5 border border-white/10 backdrop-blur mb-4 text-xs font-bold tracking-[0.2em] uppercase text-purple-300"
+            className="flex items-center justify-center gap-3 mb-6"
           >
-            Annual Event 2024
+             <div className="h-[1px] w-12 bg-luxury-gold/50"></div>
+             <span className="text-luxury-gold font-mono uppercase tracking-[0.3em] text-xs md:text-sm">Excellence In Innovation</span>
+             <div className="h-[1px] w-12 bg-luxury-gold/50"></div>
           </motion.div>
           
           <motion.h1 
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-5xl md:text-7xl font-display font-bold bg-clip-text text-transparent bg-gradient-to-b from-white via-white to-purple-200 drop-shadow-2xl"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.1 }}
+            className="text-6xl md:text-8xl lg:text-9xl font-display font-bold leading-[0.9] tracking-tighter"
           >
-            Award Winning
+            <span className="block text-white drop-shadow-2xl">AWARD</span>
+            <span className="block text-transparent bg-clip-text bg-gradient-to-b from-white via-slate-400 to-slate-800">WINNING</span>
           </motion.h1>
           
-          <motion.p 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-xl md:text-2xl font-light text-slate-300 tracking-wide"
-          >
-            Excellence in Design & Innovation
-          </motion.p>
+          <motion.div 
+            initial={{ scaleX: 0 }}
+            animate={{ scaleX: 1 }}
+            transition={{ delay: 0.5, duration: 1 }}
+            className="w-24 h-1 bg-luxury-accent mx-auto mt-8 mb-8"
+          />
         </div>
 
-        {/* Cards Grid */}
-        <div className="grid md:grid-cols-3 gap-8 mb-20 perspective-1000">
-          {finalists.map((finalist, index) => (
-            <FinalistCard key={finalist.id} finalist={finalist} index={index} />
-          ))}
+        {/* Cards Section */}
+        <div className="mb-24">
+            <div className="grid md:grid-cols-3 gap-8 perspective-1000">
+            {finalists.map((finalist, index) => (
+                <FinalistCard key={finalist.id} finalist={finalist} index={index} />
+            ))}
+            </div>
         </div>
 
-        {/* CTA */}
+        {/* Primary CTA */}
         <motion.div 
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.2 }}
-          className="text-center"
+          transition={{ delay: 1.4 }}
+          className="flex justify-center pb-20"
         >
           <button
             onClick={onRevealStart}
-            className="group relative px-10 py-5 bg-white text-black font-bold text-lg rounded-full hover:scale-105 transition-transform duration-300 shadow-[0_0_40px_rgba(255,255,255,0.3)] focus:outline-none focus:ring-4 focus:ring-purple-500/50"
+            className="group relative px-12 py-6 bg-transparent overflow-hidden rounded-none"
           >
-            <span className="relative z-10 flex items-center gap-2">
+            {/* Button Background with animated gradient border */}
+            <div className="absolute inset-0 border border-white/20 bg-white/5 backdrop-blur-sm skew-x-[-10deg] group-hover:bg-white/10 transition-colors duration-300"></div>
+            <div className="absolute bottom-0 left-0 h-[2px] w-full bg-gradient-to-r from-transparent via-luxury-gold to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
+            
+            <span className="relative z-10 flex items-center gap-4 font-display font-bold text-xl tracking-widest uppercase">
               Reveal Winners
+              <ChevronRight className="w-5 h-5 text-luxury-gold group-hover:translate-x-1 transition-transform" />
             </span>
-            <div className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-400 via-pink-500 to-purple-400 opacity-0 group-hover:opacity-20 blur-lg transition-opacity" />
           </button>
         </motion.div>
 
-        {/* Admin / Settings (Hidden by default) */}
-        <div className="fixed bottom-4 right-4 z-20">
+        {/* Admin / Settings */}
+        <div className="fixed bottom-6 right-6 z-50">
           <button 
              onClick={() => setShowUpload(!showUpload)} 
-             className="p-2 bg-black/50 rounded-full hover:bg-black/80 transition text-slate-600 hover:text-slate-300"
-             title="Admin Settings"
+             className="p-3 bg-black/50 backdrop-blur-md border border-white/10 rounded-full hover:border-luxury-gold/50 transition text-slate-500 hover:text-white group"
           >
-            <Settings className="w-5 h-5" />
+            <Settings className="w-5 h-5 group-hover:rotate-90 transition-transform duration-500" />
           </button>
           
           {showUpload && (
-            <div className="absolute bottom-12 right-0 w-64 bg-slate-900 border border-slate-700 p-4 rounded-lg shadow-xl">
-               <h4 className="text-sm font-bold mb-2">Update Data</h4>
-               <input 
-                 type="file" 
-                 accept=".json" 
-                 onChange={handleFileChange}
-                 className="text-xs text-slate-400 file:mr-2 file:py-1 file:px-2 file:rounded-full file:border-0 file:text-xs file:bg-purple-500 file:text-white hover:file:bg-purple-600 mb-2"
-               />
-               <button 
-                 onClick={() => { localStorage.removeItem('hasVisited'); window.location.reload(); }}
-                 className="text-xs text-red-400 hover:text-red-300 underline mt-2"
-               >
-                 Reset First Visit Loader
-               </button>
-            </div>
+            <motion.div 
+                initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                className="absolute bottom-16 right-0 w-72 bg-luxury-dark/90 backdrop-blur-xl border border-white/10 p-6 rounded-xl shadow-2xl"
+            >
+               <h4 className="text-sm font-bold mb-4 flex items-center gap-2">
+                   <Sparkles className="w-4 h-4 text-luxury-gold" /> Admin Controls
+               </h4>
+               <div className="space-y-4">
+                   <div>
+                       <label className="text-xs text-slate-400 mb-1 block uppercase">Update Data Source</label>
+                       <input 
+                         type="file" 
+                         accept=".json" 
+                         onChange={handleFileChange}
+                         className="w-full text-xs text-slate-300 file:mr-2 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:bg-luxury-accent/20 file:text-luxury-neon hover:file:bg-luxury-accent/30"
+                       />
+                   </div>
+                   <button 
+                     onClick={() => { localStorage.removeItem('hasVisited'); window.location.reload(); }}
+                     className="w-full py-2 text-xs border border-red-900/50 text-red-400 hover:bg-red-900/20 rounded transition"
+                   >
+                     Reset Intro Animation
+                   </button>
+               </div>
+            </motion.div>
           )}
         </div>
 

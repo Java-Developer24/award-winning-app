@@ -1,30 +1,29 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Trophy, ArrowRight, CheckCircle, Download } from 'lucide-react';
+import { X, Trophy, ArrowRight, Star, Download, Sparkles } from 'lucide-react';
 import DigitReveal from './DigitReveal';
 import ConfettiCelebration from './ConfettiCelebration';
 
 const RevealModal = ({ isOpen, onClose, finalists }) => {
-  const [step, setStep] = useState(0); // 0, 1, 2 for the three winners
+  const [step, setStep] = useState(0);
   const [viewState, setViewState] = useState('intro'); // intro, revealing, celebrated
   const [showConfetti, setShowConfetti] = useState(false);
   
   const currentWinner = finalists[step];
   const isFinished = step >= finalists.length;
 
-  // Reset state when modal opens
   useEffect(() => {
     if (isOpen) {
       setStep(0);
       setViewState('intro');
       setShowConfetti(false);
-      document.body.style.overflow = 'hidden'; // Lock scroll
+      document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'unset';
     }
   }, [isOpen]);
 
-  // Dev backdoor to skip
+  // Dev shortcut
   useEffect(() => {
     const handleKeyDown = (e) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
@@ -35,17 +34,11 @@ const RevealModal = ({ isOpen, onClose, finalists }) => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [step, viewState]);
 
-  const startReveal = () => {
-    setViewState('revealing');
-  };
+  const startReveal = () => setViewState('revealing');
 
   const handleRevealComplete = () => {
     setViewState('celebrated');
     setShowConfetti(true);
-    // Optional: Play win sound
-    try {
-      // Fallback sound if no asset provided
-    } catch(e) {}
   };
 
   const handleNext = () => {
@@ -54,8 +47,7 @@ const RevealModal = ({ isOpen, onClose, finalists }) => {
       setViewState('intro');
       setShowConfetti(false);
     } else {
-      // All done
-      setStep(s => s + 1); // Move to finish screen index
+      setStep(s => s + 1);
       setShowConfetti(true);
     }
   };
@@ -63,149 +55,185 @@ const RevealModal = ({ isOpen, onClose, finalists }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true">
-      {/* Backdrop */}
+    <div className="fixed inset-0 z-[100] flex items-center justify-center" role="dialog" aria-modal="true">
+      
+      {/* Immersive Backdrop */}
       <motion.div 
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="absolute inset-0 bg-black/90 backdrop-blur-md"
-      />
+        className="absolute inset-0 bg-luxury-black/95 backdrop-blur-xl"
+      >
+         <div className="absolute inset-0 bg-[url('/assets/noise.png')] opacity-50 mix-blend-overlay"></div>
+         <div className="absolute inset-0 bg-gradient-radial from-luxury-accent/20 via-transparent to-transparent"></div>
+      </motion.div>
 
       {showConfetti && <ConfettiCelebration />}
 
-      <div className="relative z-10 w-full max-w-2xl">
+      <div className="relative z-10 w-full h-full md:h-auto md:max-w-4xl p-4 flex items-center justify-center">
         
-        {/* FINAL SUMMARY SCREEN */}
+        {/* --- FINAL SUMMARY --- */}
         {step >= finalists.length ? (
           <motion.div
             key="summary"
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            className="glass-panel p-8 md:p-12 rounded-3xl text-center border border-purple-500/50 shadow-[0_0_50px_rgba(168,85,247,0.2)]"
+            initial={{ scale: 0.95, opacity: 0, y: 20 }}
+            animate={{ scale: 1, opacity: 1, y: 0 }}
+            className="w-full glass-premium rounded-3xl p-10 md:p-16 text-center relative overflow-hidden"
           >
-             <Trophy className="w-20 h-20 text-yellow-400 mx-auto mb-6 animate-bounce" />
-             <h2 className="text-4xl md:text-5xl font-display font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 via-yellow-400 to-yellow-200">
-               CONGRATULATIONS!
-             </h2>
-             <p className="text-lg text-slate-300 mb-8">All winners have been revealed.</p>
+             {/* Decorative background glow */}
+             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-64 bg-luxury-gold/10 blur-[100px] rounded-full pointer-events-none"></div>
+
+             <Trophy className="w-24 h-24 text-luxury-gold mx-auto mb-8 animate-float drop-shadow-[0_0_25px_rgba(212,175,55,0.5)]" />
              
-             <div className="grid gap-4 md:grid-cols-3 mb-8">
+             <h2 className="text-5xl md:text-7xl font-display font-bold mb-4 text-white tracking-tighter">
+               CEREMONY <br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-luxury-gold via-yellow-200 to-luxury-gold">COMPLETE</span>
+             </h2>
+             
+             <div className="grid gap-6 md:grid-cols-3 mt-12 mb-12">
                 {finalists.map((f, i) => (
-                  <div key={f.id} className="bg-white/5 p-4 rounded-xl border border-white/10">
-                    <img src={f.avatar} alt={f.name} className="w-12 h-12 rounded-full mx-auto mb-2 object-cover border border-white/20" />
-                    <div className="font-bold text-sm">{f.name}</div>
-                    <div className="text-xs text-purple-300">{f.prize}</div>
-                    <div className="font-mono text-xs mt-1 opacity-70">{f.code}</div>
-                  </div>
+                  <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.1 }}
+                    key={f.id} 
+                    className="bg-white/5 p-6 rounded-2xl border border-white/5 hover:border-luxury-gold/30 transition-colors"
+                  >
+                    <img src={f.avatar} alt={f.name} className="w-16 h-16 rounded-full mx-auto mb-4 object-cover ring-2 ring-white/10" />
+                    <div className="font-display font-bold text-lg">{f.name}</div>
+                    <div className="text-xs font-mono text-luxury-gold mb-2">{f.prize}</div>
+                    <div className="inline-block px-3 py-1 bg-black/40 rounded text-xs font-mono tracking-widest text-slate-400">{f.code}</div>
+                  </motion.div>
                 ))}
              </div>
 
-             <div className="flex flex-col md:flex-row gap-4 justify-center">
-               <button 
-                 onClick={() => { setStep(0); setViewState('intro'); setShowConfetti(false); }}
-                 className="px-6 py-3 rounded-full bg-white/10 hover:bg-white/20 transition font-semibold"
-               >
-                 Restart Reveal
-               </button>
+             <div className="flex gap-4 justify-center">
                <button 
                  onClick={onClose}
-                 className="px-6 py-3 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 transition font-semibold shadow-lg shadow-purple-500/30"
+                 className="px-8 py-3 rounded-full bg-white text-black font-bold hover:bg-slate-200 transition shadow-[0_0_20px_rgba(255,255,255,0.3)]"
                >
-                 Return to Home
+                 Return to Lobby
                </button>
              </div>
           </motion.div>
         ) : (
-          /* INDIVIDUAL REVEAL CARD */
+          /* --- REVEAL STEP --- */
           <AnimatePresence mode='wait'>
             <motion.div
-              key={currentWinner.id}
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: -20, opacity: 0 }}
-              className="glass-panel rounded-3xl overflow-hidden shadow-2xl border-t border-white/10"
+              key={`reveal-${step}`}
+              className="w-full max-w-3xl"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
             >
-              {/* Header */}
-              <div className="bg-white/5 p-4 flex justify-between items-center border-b border-white/5">
-                <div className="flex items-center gap-2 text-sm font-bold text-slate-400 uppercase tracking-widest">
-                  <Trophy className="w-4 h-4 text-purple-400" />
-                  Winner Reveal {step + 1} of {finalists.length}
+                {/* Header / Progress */}
+                <div className="flex justify-between items-center mb-8 text-slate-400 border-b border-white/10 pb-4">
+                    <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest">
+                        <span className="w-2 h-2 bg-luxury-gold rounded-full animate-pulse"></span>
+                        System Status: Live
+                    </div>
+                    <div className="text-xs font-mono uppercase tracking-widest">
+                        Reveal {step + 1} / {finalists.length}
+                    </div>
+                    {viewState !== 'revealing' && (
+                        <button onClick={onClose} className="hover:text-white transition"><X className="w-6 h-6" /></button>
+                    )}
                 </div>
-                {/* Close button only visible in intro or complete state to prevent skipping reveal */}
-                {viewState !== 'revealing' && (
-                  <button onClick={onClose} className="p-2 hover:bg-white/10 rounded-full transition">
-                    <X className="w-5 h-5 text-slate-400" />
-                  </button>
-                )}
-              </div>
 
-              <div className="p-8 md:p-12 text-center">
-                
-                {/* Avatar */}
-                <motion.div 
-                  animate={viewState === 'celebrated' ? { scale: 1.1, rotate: [0, -5, 5, 0] } : {}}
-                  className="relative w-32 h-32 mx-auto mb-6"
-                >
-                  <img 
-                    src={currentWinner.avatar} 
-                    alt={currentWinner.name}
-                    className="w-full h-full rounded-full object-cover border-4 border-white/10 shadow-xl" 
-                  />
-                  {viewState === 'celebrated' && (
+                {/* Main Content */}
+                <div className="text-center">
+                    
+                    {/* Avatar Container */}
+                    <div className="relative mb-8 inline-block">
+                        <motion.div 
+                           animate={viewState === 'celebrated' ? { 
+                               rotate: 360,
+                               boxShadow: ["0 0 0px rgba(212,175,55,0)", "0 0 50px rgba(212,175,55,0.5)"] 
+                           } : {}}
+                           transition={{ duration: 1 }}
+                           className="relative w-40 h-40 md:w-56 md:h-56 rounded-full p-1 bg-gradient-to-b from-white/20 to-transparent"
+                        >
+                            <div className="w-full h-full rounded-full overflow-hidden bg-black relative">
+                                <img 
+                                    src={currentWinner.avatar} 
+                                    alt={currentWinner.name}
+                                    className={`w-full h-full object-cover transition-all duration-1000 ${viewState === 'intro' ? 'grayscale brightness-50 blur-sm' : 'grayscale-0 blur-0'}`}
+                                />
+                                {viewState === 'intro' && (
+                                    <div className="absolute inset-0 flex items-center justify-center">
+                                        <Sparkles className="text-white/20 w-12 h-12" />
+                                    </div>
+                                )}
+                            </div>
+                        </motion.div>
+                        {viewState === 'celebrated' && (
+                            <motion.div 
+                                initial={{ scale: 0 }} 
+                                animate={{ scale: 1 }}
+                                className="absolute -bottom-4 -right-4 bg-luxury-gold text-black p-3 rounded-full shadow-lg border-4 border-black"
+                            >
+                                <Trophy className="w-6 h-6" />
+                            </motion.div>
+                        )}
+                    </div>
+
+                    {/* Text Info */}
+                    <motion.h2 
+                        layout
+                        className="text-4xl md:text-6xl font-display font-bold mb-2 tracking-tight"
+                    >
+                        {currentWinner.name}
+                    </motion.h2>
+                    
                     <motion.div 
-                      initial={{ scale: 0 }} animate={{ scale: 1 }}
-                      className="absolute -bottom-2 -right-2 bg-green-500 text-black p-2 rounded-full border-2 border-white"
+                        className="inline-block px-4 py-1 rounded-full border border-luxury-accent/30 bg-luxury-accent/10 text-luxury-neon font-mono text-sm uppercase tracking-widest mb-10"
                     >
-                      <CheckCircle className="w-6 h-6" />
+                        {currentWinner.prize}
                     </motion.div>
-                  )}
-                </motion.div>
 
-                <h2 className="text-3xl font-bold mb-2">{currentWinner.name}</h2>
-                <p className="text-purple-300 font-medium mb-8">{currentWinner.prize}</p>
+                    {/* Digit Reveal Section */}
+                    <div className="bg-white/5 border border-white/5 rounded-2xl p-8 mb-10 relative overflow-hidden">
+                        <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+                        <DigitReveal 
+                            code={currentWinner.code}
+                            isRevealing={viewState === 'revealing'}
+                            onComplete={handleRevealComplete}
+                        />
+                        <div className="text-center mt-4 text-xs font-mono text-slate-500 uppercase tracking-[0.5em]">Authentication Code</div>
+                    </div>
 
-                {/* The Reveal Component */}
-                <div className="bg-black/40 rounded-2xl p-6 mb-8 border border-white/5">
-                  <div className="text-sm text-slate-500 mb-2 uppercase tracking-widest">Winning Code</div>
-                  <DigitReveal 
-                    code={currentWinner.code} 
-                    isRevealing={viewState === 'revealing'}
-                    onComplete={handleRevealComplete}
-                  />
+                    {/* Controls */}
+                    <div className="h-20 flex items-center justify-center">
+                        {viewState === 'intro' && (
+                            <button 
+                                onClick={startReveal}
+                                className="relative group px-10 py-4 bg-white text-black font-bold text-lg uppercase tracking-widest hover:bg-luxury-gold transition-colors duration-300"
+                            >
+                                Reveal Winner
+                                <div className="absolute top-0 right-0 w-2 h-2 bg-black transform translate-x-1/2 -translate-y-1/2"></div>
+                                <div className="absolute bottom-0 left-0 w-2 h-2 bg-black transform -translate-x-1/2 translate-y-1/2"></div>
+                            </button>
+                        )}
+
+                        {viewState === 'revealing' && (
+                             <div className="font-mono text-luxury-gold text-sm animate-pulse">
+                                 [ DECRYPTING SECURE DATA ]
+                             </div>
+                        )}
+
+                        {viewState === 'celebrated' && (
+                            <motion.button 
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                onClick={handleNext}
+                                className="flex items-center gap-3 px-10 py-4 bg-gradient-to-r from-luxury-accent to-purple-600 rounded-lg font-bold text-lg uppercase tracking-wider hover:brightness-110 transition-all shadow-[0_0_30px_rgba(109,40,217,0.4)]"
+                            >
+                                {step < finalists.length - 1 ? 'Next Finalist' : 'Finalize Event'}
+                                <ArrowRight className="w-5 h-5" />
+                            </motion.button>
+                        )}
+                    </div>
+
                 </div>
-
-                {/* Actions */}
-                <div className="h-16 flex items-center justify-center">
-                  {viewState === 'intro' && (
-                    <button 
-                      onClick={startReveal}
-                      className="w-full md:w-auto px-8 py-4 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold tracking-wide hover:scale-105 transition-transform shadow-[0_0_20px_rgba(168,85,247,0.4)]"
-                    >
-                      Reveal Winner
-                    </button>
-                  )}
-                  
-                  {viewState === 'revealing' && (
-                     <div className="flex items-center gap-2 text-purple-300 animate-pulse">
-                       <span className="w-2 h-2 bg-purple-400 rounded-full" />
-                       Verifying Code...
-                     </div>
-                  )}
-
-                  {viewState === 'celebrated' && (
-                    <motion.button
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      onClick={handleNext}
-                      className="group flex items-center gap-2 px-8 py-3 rounded-full bg-white text-black font-bold hover:bg-slate-200 transition"
-                    >
-                      {step < finalists.length - 1 ? 'Next Reveal' : 'Finish'}
-                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                    </motion.button>
-                  )}
-                </div>
-              </div>
             </motion.div>
           </AnimatePresence>
         )}
