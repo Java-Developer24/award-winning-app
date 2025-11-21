@@ -24,15 +24,23 @@ const SplineScene = () => {
     }
   }, []);
 
+  // Fallback component (Static Hero Background)
+  const FallbackHero = () => (
+    <div 
+      className="absolute inset-0 bg-[url('/assets/bg-aurora.png')] bg-cover bg-center opacity-60"
+      style={{ backgroundBlendMode: 'overlay' }}
+    >
+      <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/90"></div>
+    </div>
+  );
+
   if (!isCompatible || hasError) {
-    return (
-      <div className="absolute inset-0 bg-gradient-to-br from-luxury-black via-[#1a0b2e] to-luxury-black opacity-80" />
-    );
+    return <FallbackHero />;
   }
 
   return (
     <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-      <Suspense fallback={<div className="w-full h-full bg-luxury-black" />}>
+      <Suspense fallback={<FallbackHero />}>
         <Spline
           // Abstract geometric scene (public URL)
           scene="https://prod.spline.design/6Wq1Q7YGyM-iab9i/scene.splinecode"

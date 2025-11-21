@@ -3,23 +3,23 @@
     {
       "id": 1,
       "name": "Anita Sharma",
-      "avatar": "/assets/avatar1.jpg",
+      "avatar": "/assets/avatar1.png",
       "code": "7419",
-      "prize": "Scooty (1st Place)"
+      "prize": "Scooty (1st Prize)"
     },
     {
       "id": 2,
       "name": "Rohit Kumar",
-      "avatar": "/assets/avatar2.jpg",
+      "avatar": "/assets/avatar2.png",
       "code": "2581",
-      "prize": "Sport Bike (2nd Place)"
+      "prize": "Bike (2nd Prize)"
     },
     {
       "id": 3,
       "name": "Sana Iyer",
-      "avatar": "/assets/avatar3.jpg",
+      "avatar": "/assets/avatar3.png",
       "code": "9034",
-      "prize": "Cruiser (3rd Place)"
+      "prize": "Bike (3rd Prize)"
     }
   ]
 }
