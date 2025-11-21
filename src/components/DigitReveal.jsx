@@ -3,22 +3,22 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const DigitSlot = ({ value, isRevealed }) => {
   return (
-    <div className="relative w-16 h-24 md:w-20 md:h-32 bg-[#050505] border border-white/10 rounded flex items-center justify-center overflow-hidden shadow-[inset_0_0_20px_rgba(0,0,0,0.8)] group">
+    <div className="relative w-14 h-20 md:w-24 md:h-36 bg-[#050505] border border-white/10 rounded-lg flex items-center justify-center overflow-hidden shadow-[inset_0_0_30px_rgba(0,0,0,1)] group">
       
-      {/* Inner Glow */}
-      <div className="absolute inset-0 bg-luxury-accent/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+      {/* Ambient Glow */}
+      <div className={`absolute inset-0 transition-opacity duration-500 ${isRevealed ? 'bg-luxury-accent/20 opacity-100' : 'opacity-0'}`} />
       
-      {/* Top/Bottom reflections */}
-      <div className="absolute top-0 left-0 right-0 h-1/2 bg-gradient-to-b from-white/5 to-transparent pointer-events-none" />
+      {/* Glass Reflection */}
+      <div className="absolute top-0 left-0 right-0 h-[40%] bg-gradient-to-b from-white/10 to-transparent pointer-events-none rounded-t-lg" />
 
       <AnimatePresence mode='wait'>
         {isRevealed ? (
           <motion.span
             key="value"
-            initial={{ y: '100%', filter: 'blur(10px)', opacity: 0 }}
-            animate={{ y: 0, filter: 'blur(0px)', opacity: 1 }}
-            transition={{ type: "spring", stiffness: 150, damping: 15 }}
-            className="text-5xl md:text-7xl font-display font-bold text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.8)]"
+            initial={{ y: 50, opacity: 0, filter: 'blur(10px)' }}
+            animate={{ y: 0, opacity: 1, filter: 'blur(0px)' }}
+            transition={{ type: "spring", stiffness: 200, damping: 15 }}
+            className="relative z-10 text-4xl md:text-8xl font-display font-bold text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.9)]"
           >
             {value}
           </motion.span>
@@ -30,28 +30,19 @@ const DigitSlot = ({ value, isRevealed }) => {
             exit={{ opacity: 0 }}
             className="flex flex-col gap-2 items-center justify-center h-full w-full opacity-30"
           >
-             {/* Rolling placeholder effect */}
+             {/* Tech Scanning Effect */}
              <motion.div 
-                animate={{ y: [0, -20, 0] }}
-                transition={{ duration: 0.5, repeat: Infinity }}
-                className="w-1 h-1 bg-luxury-neon rounded-full" 
+                animate={{ top: ['0%', '100%'] }}
+                transition={{ duration: 1.5, repeat: Infinity, ease: 'linear' }}
+                className="absolute left-0 right-0 h-[2px] bg-luxury-neon shadow-[0_0_10px_#d946ef]" 
              />
-             <motion.div 
-                animate={{ y: [0, -20, 0] }}
-                transition={{ duration: 0.5, delay: 0.1, repeat: Infinity }}
-                className="w-1 h-1 bg-luxury-neon rounded-full" 
-             />
-             <motion.div 
-                animate={{ y: [0, -20, 0] }}
-                transition={{ duration: 0.5, delay: 0.2, repeat: Infinity }}
-                className="w-1 h-1 bg-luxury-neon rounded-full" 
-             />
+             <span className="font-mono text-luxury-accent text-2xl">?</span>
           </motion.div>
         )}
       </AnimatePresence>
       
-      {/* Scanline */}
-      <div className="absolute inset-0 bg-[linear-gradient(transparent_50%,rgba(0,0,0,0.5)_50%)] bg-[length:100%_4px] pointer-events-none opacity-40" />
+      {/* Mesh Overlay */}
+      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuMDUiLz4KPC9zdmc+')] opacity-20 pointer-events-none" />
     </div>
   );
 };
@@ -75,15 +66,15 @@ const DigitReveal = ({ code, onComplete, isRevealing }) => {
         clearInterval(revealInterval);
         setTimeout(() => {
           onComplete();
-        }, 1200); // Slower, more dramatic pause
+        }, 800); // Dramatic pause after last digit
       }
-    }, 500); // Slower cadence
+    }, 350); // Specific timing per spec
 
     return () => clearInterval(revealInterval);
   }, [isRevealing, code, onComplete, digits.length]);
 
   return (
-    <div className="flex gap-3 md:gap-6 justify-center my-12 perspective-1000" aria-live="polite">
+    <div className="flex gap-2 md:gap-4 justify-center my-8 md:my-12 perspective-1000" aria-live="polite">
       {digits.map((digit, idx) => (
         <DigitSlot 
           key={idx} 

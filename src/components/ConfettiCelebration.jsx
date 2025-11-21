@@ -3,30 +3,33 @@ import React, { useState, useEffect, Suspense } from 'react';
 const Confetti = React.lazy(() => import('react-confetti'));
 
 const ConfettiCelebration = () => {
-  const [windowDimension, setWindowDimension] = useState({ width: window.innerWidth, height: window.innerHeight });
-
-  const detectSize = () => {
-    setWindowDimension({ width: window.innerWidth, height: window.innerHeight });
-  }
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
-    window.addEventListener('resize', detectSize);
-    return () => {
-      window.removeEventListener('resize', detectSize);
-    }
+    // Set dimensions only on client side to avoid SSR issues
+    setDimensions({ width: window.innerWidth, height: window.innerHeight });
+
+    const handleResize = () => {
+      setDimensions({ width: window.innerWidth, height: window.innerHeight });
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-[100]">
+    <div className="fixed inset-0 pointer-events-none z-[200]">
       <Suspense fallback={null}>
-        <Confetti
-          width={windowDimension.width}
-          height={windowDimension.height}
-          recycle={false}
-          numberOfPieces={500}
-          gravity={0.2}
-          colors={['#a855f7', '#ec4899', '#eab308', '#ffffff']}
-        />
+        {dimensions.width > 0 && (
+          <Confetti
+            width={dimensions.width}
+            height={dimensions.height}
+            recycle={true}
+            numberOfPieces={400}
+            gravity={0.15}
+            colors={['#FFD700', '#d946ef', '#7c3aed', '#ffffff']}
+          />
+        )}
       </Suspense>
     </div>
   );

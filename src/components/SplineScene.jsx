@@ -1,5 +1,4 @@
-import React, { useState, Suspense } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, Suspense, useEffect } from 'react';
 
 // Lazy load Spline to prevent main bundle crash if import fails
 const Spline = React.lazy(() => import('@splinetool/react-spline'));
@@ -7,38 +6,45 @@ const Spline = React.lazy(() => import('@splinetool/react-spline'));
 const SplineScene = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [hasError, setHasError] = useState(false);
+  const [isCompatible, setIsCompatible] = useState(true);
 
-  // Check for WebGL support
-  const isWebGLAvailable = () => {
-    try {
-      const canvas = document.createElement('canvas');
-      return !!(window.WebGLRenderingContext && (canvas.getContext('webgl') || canvas.getContext('experimental-webgl')));
-    } catch (e) {
-      return false;
+  useEffect(() => {
+    // Check for WebGL support
+    const checkWebGL = () => {
+      try {
+        const canvas = document.createElement('canvas');
+        return !!(window.WebGLRenderingContext && (canvas.getContext('webgl') || canvas.getContext('experimental-webgl')));
+      } catch (e) {
+        return false;
+      }
+    };
+    
+    if (!checkWebGL()) {
+      setIsCompatible(false);
     }
-  };
+  }, []);
 
-  if (!isWebGLAvailable() || hasError) {
+  if (!isCompatible || hasError) {
     return (
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900 opacity-80" />
+      <div className="absolute inset-0 bg-gradient-to-br from-luxury-black via-[#1a0b2e] to-luxury-black opacity-80" />
     );
   }
 
   return (
-    <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none opacity-60">
-      <Suspense fallback={<div className="w-full h-full bg-slate-900" />}>
+    <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+      <Suspense fallback={<div className="w-full h-full bg-luxury-black" />}>
         <Spline
-          // Using a public abstract Spline scene URL. 
-          // If this expires or fails, the onError will catch it.
-          // This is a geometric abstract shape scene.
+          // Abstract geometric scene (public URL)
           scene="https://prod.spline.design/6Wq1Q7YGyM-iab9i/scene.splinecode"
           onLoad={() => setIsLoaded(true)}
           onError={() => setHasError(true)}
-          className={isLoaded ? 'opacity-100 transition-opacity duration-1000' : 'opacity-0'}
+          className={`w-full h-full transition-opacity duration-1000 ${isLoaded ? 'opacity-60' : 'opacity-0'}`}
         />
       </Suspense>
-      {/* Overlay to blend 3D into background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-slate-950/50 to-slate-950" />
+      
+      {/* Cinematic Overlay to blend 3D into background */}
+      <div className="absolute inset-0 bg-gradient-to-b from-luxury-black/20 via-transparent to-luxury-black" />
+      <div className="absolute inset-0 bg-luxury-accent/10 mix-blend-overlay" />
     </div>
   );
 };

@@ -3,23 +3,23 @@
     {
       "id": 1,
       "name": "Anita Sharma",
-      "avatar": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop",
+      "avatar": "/assets/avatar1.jpg",
       "code": "7419",
-      "prize": "Scooty (1st)"
+      "prize": "Scooty (1st Place)"
     },
     {
       "id": 2,
       "name": "Rohit Kumar",
-      "avatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop",
+      "avatar": "/assets/avatar2.jpg",
       "code": "2581",
-      "prize": "Bike (2nd)"
+      "prize": "Sport Bike (2nd Place)"
     },
     {
       "id": 3,
       "name": "Sana Iyer",
-      "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=400&fit=crop",
+      "avatar": "/assets/avatar3.jpg",
       "code": "9034",
-      "prize": "Bike (3rd)"
+      "prize": "Cruiser (3rd Place)"
     }
   ]
 }
